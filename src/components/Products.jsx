@@ -10,6 +10,10 @@ import { Link, useNavigate } from "react-router-dom";
 function Products() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
+  const [showBrand, setShowBrand] = useState(false);
+  const [brand, setBrand] = useState("");
+  const [category, setCategory] = useState("");
+
   const navigate = useNavigate();
   const getProducts = () => {
     axios
@@ -48,26 +52,124 @@ function Products() {
   const handleChange = (e) => {
     setSearch(e.target.value);
   };
-  useEffect(() => {
+
+  const handleSort = () => {
+    setShowBrand(!showBrand);
+  };
+
+  const handleBrandChange = (e) => {
+    setBrand(e.target.value);
+  };
+
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+  };
+
+  const handleSearch = () => {
+    //search by input field result
     let value = search.toLowerCase();
-    if (value && value.length > 0) {
-      let filteredProduct = products.filter((product) =>
-        product.productName.toLowerCase().includes(value)
-      );
-      setProducts(filteredProduct);
+    let newProducts = [...products];
+    let searchProduct = newProducts.filter((product) =>
+      product.productName.toLowerCase().includes(value)
+    );
+    console.log(search, searchProduct);
+    //filter by brand & category
+    if (searchProduct) {
+      setProducts(searchProduct);
     } else {
       getProducts();
     }
-  }, [search]);
+  };
+  const handleSearch2 = () => {
+    let newProducts = [...products];
+    let filteredProducts = newProducts.filter(
+      (product) => product.brand === brand && product.category === category
+    );
+    if (filteredProducts) {
+      setProducts(filteredProducts);
+    } else {
+      getProducts();
+    }
+  };
   return (
     <div className="min-h-auto pt-24 lg:min-h-screen lg:pt-24 lg:pb-10 flex justify-center items-center bg-green-100 flex-col">
-      <input
-        type="text"
-        onChange={handleChange}
-        value={search}
-        className="text-[14px] bg-yellow-200 text-green-700 fixed top-[70px] lg:top-[74px] text-center px-3 py-[5px] rounded-md"
-        placeholder="search by product name"
-      />
+      <div className="search-box fixed top-[70px] lg:top-[74px]">
+        <input
+          type="text"
+          onChange={handleChange}
+          value={search}
+          className="text-[14px] bg-yellow-200 text-green-700  text-center px-3 py-[5px] rounded-md"
+          placeholder="search by product name"
+        />
+        <button onClick={handleSearch} className="">
+          🔍
+        </button>
+      </div>
+      <div className="searchProduct fixed bg-pink-100 px-5 pb-2 top-[70px] left-2">
+        <button onClick={handleSort} className="text-pink-500">
+          sort {showBrand ? "-" : "+"}
+        </button>
+        {showBrand && (
+          <>
+            <div className="mt-4">
+              <label htmlFor="brand">Brands :</label> <br />
+              <select
+                name="brand"
+                id="brand"
+                value={brand}
+                onChange={handleBrandChange}
+                className="min-w-[90px] mt-2 rounded-sm py-1"
+              >
+                {products && products.length ? (
+                  <>
+                    {products.map((product, index) => {
+                      return (
+                        <option key={index} value={product.brand}>
+                          {product.brand}
+                        </option>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <></>
+                )}
+              </select>
+            </div>
+            <div className="mt-4">
+              <label htmlFor="brand">Categories :</label> <br />
+              <select
+                name="category"
+                id="category"
+                value={category}
+                onChange={handleCategoryChange}
+                className="min-w-[90px] mt-2 rounded-sm py-1"
+              >
+                {products && products.length ? (
+                  <>
+                    {products.map((product, index) => {
+                      return (
+                        <option key={index} value={product.category}>
+                          {product.category}
+                        </option>
+                      );
+                    })}
+                  </>
+                ) : (
+                  <></>
+                )}
+              </select>
+              <br />
+              <button
+                className="mt-2 bg-green-300 px-2 py-1 rounded-sm text-[12px]"
+                onClick={handleSearch2}
+              >
+                search
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+
       <div className="products bg-green-100 w-screen p-5 flex gap-3 lg:gap-5 justify-center flex-wrap">
         {products && products.length > 0 ? (
           <>
