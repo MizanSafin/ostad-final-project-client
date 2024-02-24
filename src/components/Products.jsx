@@ -5,12 +5,14 @@ import { MdOutlineEdit } from "react-icons/md";
 import { MdDeleteOutline } from "react-icons/md";
 
 import { Link, useNavigate } from "react-router-dom";
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
+import { MdOutlineKeyboardArrowUp } from "react-icons/md";
 
 // http://localhost:3444/product/all-product
 function Products() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
-  const [showBrand, setShowBrand] = useState(false);
+  const [showBrand, setShowBrand] = useState(true);
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
 
@@ -74,7 +76,7 @@ function Products() {
     );
     console.log(search, searchProduct);
     //filter by brand & category
-    if (searchProduct) {
+    if (searchProduct && searchProduct.length) {
       setProducts(searchProduct);
     } else {
       getProducts();
@@ -82,10 +84,12 @@ function Products() {
   };
   const handleSearch2 = () => {
     let newProducts = [...products];
+    console.log(newProducts);
     let filteredProducts = newProducts.filter(
-      (product) => product.brand === brand && product.category === category
+      (product) => product.brand === brand || product.category === category
     );
-    if (filteredProducts) {
+    console.log(brand, category, filteredProducts);
+    if (filteredProducts && filteredProducts.length > 0) {
       setProducts(filteredProducts);
     } else {
       getProducts();
@@ -98,7 +102,7 @@ function Products() {
           type="text"
           onChange={handleChange}
           value={search}
-          className="text-[14px] bg-yellow-200 text-green-700  text-center px-3 py-[5px] rounded-md"
+          className="text-[14px] bg-yellow-200 text-green-700 lg:w-[200px] w-[130px]  text-center px-3 py-[5px] rounded-md"
           placeholder="search by product name"
         />
         <button onClick={handleSearch} className="">
@@ -106,10 +110,18 @@ function Products() {
         </button>
       </div>
       <div className="searchProduct fixed bg-pink-100 px-5 pb-2 top-[70px] left-2">
-        <button onClick={handleSort} className="text-pink-500">
-          sort {showBrand ? "-" : "+"}
+        <button
+          onClick={handleSort}
+          className="text-pink-500 flex justify-center items-center gap-0"
+        >
+          sort{" "}
+          {showBrand ? (
+            <MdOutlineKeyboardArrowUp className="pt-[7px] text-[30px]" />
+          ) : (
+            <MdOutlineKeyboardArrowDown className="pt-[7px] text-[30px]" />
+          )}
         </button>
-        {showBrand && (
+        {showBrand && products && products.length ? (
           <>
             <div className="mt-4">
               <label htmlFor="brand">Brands :</label> <br />
@@ -120,19 +132,15 @@ function Products() {
                 onChange={handleBrandChange}
                 className="min-w-[90px] mt-2 rounded-sm py-1"
               >
-                {products && products.length ? (
-                  <>
-                    {products.map((product, index) => {
-                      return (
-                        <option key={index} value={product.brand}>
-                          {product.brand}
-                        </option>
-                      );
-                    })}
-                  </>
-                ) : (
-                  <></>
-                )}
+                <>
+                  {products.map((product, index) => {
+                    return (
+                      <option key={index} value={product.brand}>
+                        {product.brand}
+                      </option>
+                    );
+                  })}
+                </>
               </select>
             </div>
             <div className="mt-4">
@@ -144,19 +152,13 @@ function Products() {
                 onChange={handleCategoryChange}
                 className="min-w-[90px] mt-2 rounded-sm py-1"
               >
-                {products && products.length ? (
-                  <>
-                    {products.map((product, index) => {
-                      return (
-                        <option key={index} value={product.category}>
-                          {product.category}
-                        </option>
-                      );
-                    })}
-                  </>
-                ) : (
-                  <></>
-                )}
+                {products.map((product, index) => {
+                  return (
+                    <option key={index} value={product.category}>
+                      {product.category}
+                    </option>
+                  );
+                })}
               </select>
               <br />
               <button
@@ -167,6 +169,8 @@ function Products() {
               </button>
             </div>
           </>
+        ) : (
+          ""
         )}
       </div>
 
