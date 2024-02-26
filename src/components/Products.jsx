@@ -12,7 +12,7 @@ import { MdOutlineKeyboardArrowUp } from "react-icons/md";
 function Products() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
-  const [showBrand, setShowBrand] = useState(true);
+  const [showBrand, setShowBrand] = useState(false);
   const [brand, setBrand] = useState("");
   const [category, setCategory] = useState("");
 
@@ -102,14 +102,14 @@ function Products() {
           type="text"
           onChange={handleChange}
           value={search}
-          className="text-[14px] bg-yellow-200 text-green-700 lg:w-[200px] w-[130px]  text-center px-3 py-[5px] rounded-md"
+          className="text-[14px] bg-green-200 text-green-700 lg:w-[200px] w-[130px]  text-center px-3 py-[5px] rounded-md"
           placeholder="search by product name"
         />
         <button onClick={handleSearch} className="">
           🔍
         </button>
       </div>
-      <div className="searchProduct fixed bg-pink-100 px-5 pb-2 top-[70px] left-2">
+      <div className="searchProduct fixed bg-green-200 px-5 pb-2 top-[70px] left-2">
         <button
           onClick={handleSort}
           className="text-pink-500 flex justify-center items-center gap-0"
@@ -190,10 +190,10 @@ function Products() {
                     src={image}
                     alt=""
                   />
-                  <h2 className=" font-bold text-[18px] text-slate-500 mb-1 mt-3">
+                  <h2 className=" font-bold text-[18px] text-green-700 mb-1 mt-3">
                     {productName}
                   </h2>
-                  <h4 className="font-bold text-[14px] text-slate-500 mb-1 mt-0">
+                  <h4 className="font-bold text-[14px] text-green-800 mb-1 mt-0">
                     {description}
                   </h4>
                   <div className="btns flex gap-3 text-green-600  justify-end mt-2 lg:mt-4">
